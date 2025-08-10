@@ -18,11 +18,11 @@ The difficulty level is **medium**. The challenge requires solid knowledge of co
 ----------------------------------------------------------------------
 
 ## Get The image from Docker
-The challenge image is available both on Docker Hub and on my GitHub.
+The challenge image is available on Docker Hub:
 Here are the links:
 
 - Dockerhub : https://hub.docker.com/repositories/razafindraibe
-- Github :httpdsdsdd...
+
 
 **Download the Docker image from Docker Hub**
 
