@@ -1,0 +1,10 @@
+#service configuration: Define a service named ctf-machine
+version: '3.8'
+services:
+  ctf-machine:
+    build: .
+    container_name: ctf-machine
+    ports:
+      - "2222:22"
+      - "8080:80"
+    restart: unless-stopped

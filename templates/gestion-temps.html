@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestion du temps - Evil Corp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Reprendre même CSS que la page gestion-personnel.html (sidebar + layout + responsive) */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #1e293b;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background: #2563eb;
+      color: white;
+      width: 250px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 15px rgba(37, 99, 235, 0.3);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+    .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+    .menu li {
+      margin-bottom: 8px;
+    }
+    .menu li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 20px;
+      display: block;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    .menu li a:hover {
+      background: rgba(255 255 255 / 0.15);
+      transform: translateX(6px);
+    }
+    .menu li a.active {
+      background: #1e40af;
+      box-shadow: 0 0 10px #1e40afaa;
+      transform: translateX(6px);
+    }
+    main.content {
+      flex-grow: 1;
+      padding: 40px;
+      background: white;
+      border-radius: 0 20px 20px 0;
+      box-shadow: -10px 0 30px rgb(37 99 235 / 0.1);
+      overflow-y: auto;
+    }
+    h1 {
+      margin-top: 0;
+      font-weight: 700;
+      font-size: 32px;
+      color: #1e293b;
+    }
+    .time-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
+    .card {
+      background: #e0e7ff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgb(37 99 235 / 0.2);
+      transition: box-shadow 0.3s ease, transform 0.25s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      box-shadow: 0 8px 30px rgb(37 99 235 / 0.35);
+      transform: translateY(-6px);
+    }
+    .card h3 {
+      margin-top: 0;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .card p {
+      color: #334155;
+      font-weight: 500;
+      margin: 12px 0 0;
+    }
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 15px 20px;
+        overflow-x: auto;
+        box-shadow: none;
+        border-radius: 0 0 20px 20px;
+      }
+      .logo {
+        margin-bottom: 0;
+        margin-right: 30px;
+      }
+      .menu {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .menu li {
+        margin: 0 8px;
+      }
+      .menu li a {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+      main.content {
+        border-radius: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Evil Corp</div>
+      <ul class="menu">
+        <li><a href="{{ url_for('dashboard') }}" class="{% if request.path == '/' %}active{% endif %}">Tableau de bord</a></li>
+        <li><a href="{{ url_for('gestion_personnel') }}" class="{% if request.path == '/gestion-personnel' %}active{% endif %}">Gestion du personnel</a></li>
+        <li><a href="{{ url_for('gestion_temps') }}" class="{% if request.path == '/gestion-temps' %}active{% endif %}">Gestion du temps</a></li>
+        <li><a href="{{ url_for('dossiers_rh') }}" class="{% if request.path == '/dossiers-rh' %}active{% endif %}">Dossiers RH</a></li>
+        <li><a href="{{ url_for('equipes_departements') }}" class="{% if request.path == '/equipes-departements' %}active{% endif %}">Equipes & Départements</a></li>
+        <li><a href="{{ url_for('messagerie_interne') }}" class="{% if request.path == '/messagerie-interne' %}active{% endif %}">Messagerie interne</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <h1>Gestion du temps</h1>
+      <div class="time-cards">
+        <div class="card">
+          <h3>Pointage des employés</h3>
+          <p>Suivi des heures d'entrée et sortie en temps réel.</p>
+        </div>
+        <div class="card">
+          <h3>Congés</h3>
+          <p>Gestion des demandes et approbations de congés.</p>
+        </div>
+        <div class="card">
+          <h3>Planning</h3>
+          <p>Organisation des horaires et des équipes.</p>
+        </div>
+        <div class="card">
+          <h3>Rapports horaires</h3>
+          <p>Analyse des heures travaillées par période.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

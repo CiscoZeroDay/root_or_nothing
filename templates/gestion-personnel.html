@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestion du personnel - Evil Corp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* (Reprends ici le même CSS sidebar + layout + contenu) */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #1e293b;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background: #2563eb;
+      color: white;
+      width: 250px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 15px rgba(37, 99, 235, 0.3);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+    .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+    .menu li {
+      margin-bottom: 8px;
+    }
+    .menu li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 20px;
+      display: block;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    .menu li a:hover {
+      background: rgba(255 255 255 / 0.15);
+      transform: translateX(6px);
+    }
+    .menu li a.active {
+      background: #1e40af;
+      box-shadow: 0 0 10px #1e40afaa;
+      transform: translateX(6px);
+    }
+    main.content {
+      flex-grow: 1;
+      padding: 40px;
+      background: white;
+      border-radius: 0 20px 20px 0;
+      box-shadow: -10px 0 30px rgb(37 99 235 / 0.1);
+      overflow-y: auto;
+    }
+    h1 {
+      margin-top: 0;
+      font-weight: 700;
+      font-size: 32px;
+      color: #1e293b;
+    }
+    .personnel-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      box-shadow: 0 0 15px rgb(37 99 235 / 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .personnel-table th,
+    .personnel-table td {
+      padding: 14px 20px;
+      text-align: left;
+    }
+    .personnel-table thead {
+      background: #2563eb;
+      color: white;
+    }
+    .personnel-table tbody tr {
+      background: #f9fafb;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .personnel-table tbody tr:hover {
+      background: #dbeafe;
+    }
+    .btn-add {
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 22px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgb(37 99 235 / 0.4);
+      transition: background-color 0.3s ease;
+    }
+    .btn-add:hover {
+      background-color: #1e40af;
+    }
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 15px 20px;
+        overflow-x: auto;
+        box-shadow: none;
+        border-radius: 0 0 20px 20px;
+      }
+      .logo {
+        margin-bottom: 0;
+        margin-right: 30px;
+      }
+      .menu {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .menu li {
+        margin: 0 8px;
+      }
+      .menu li a {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+      main.content {
+        border-radius: 0;
+        padding: 20px;
+      }
+      .personnel-table {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Evil Corp</div>
+      <ul class="menu">
+        <li><a href="{{ url_for('dashboard') }}" class="{% if request.path == '/' %}active{% endif %}">Tableau de bord</a></li>
+        <li><a href="{{ url_for('gestion_personnel') }}" class="{% if request.path == '/gestion-personnel' %}active{% endif %}">Gestion du personnel</a></li>
+        <li><a href="{{ url_for('gestion_temps') }}" class="{% if request.path == '/gestion-temps' %}active{% endif %}">Gestion du temps</a></li>
+        <li><a href="{{ url_for('dossiers_rh') }}" class="{% if request.path == '/dossiers-rh' %}active{% endif %}">Dossiers RH</a></li>
+        <li><a href="{{ url_for('equipes_departements') }}" class="{% if request.path == '/equipes-departements' %}active{% endif %}">Equipes & Départements</a></li>
+        <li><a href="{{ url_for('messagerie_interne') }}" class="{% if request.path == '/messagerie-interne' %}active{% endif %}">Messagerie interne</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <h1>Gestion du personnel</h1>
+      <button class="btn-add">+ Ajouter un employé</button>
+      <table class="personnel-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Département</th>
+            <th>Date d'embauche</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Claire Dubois</td><td>Assistante RH</td><td>Ressources Humaines</td><td>15/03/2018</td></tr>
+          <tr><td>Marc Lemoine</td><td>Développeur</td><td>Informatique</td><td>22/06/2020</td></tr>
+          <tr><td>Sophie Martin</td><td>Commerciale</td><td>Ventes</td><td>10/09/2019</td></tr>
+          <tr><td>Antoine Dupont</td><td>Technicien Support</td><td>Informatique</td><td>01/12/2021</td></tr>
+          <tr><td>Yasmine El Amrani</td><td>Responsable Recrutement</td><td>Ressources Humaines</td><td>12/02/2017</td></tr>
+          <tr><td>Omar Bensalah</td><td>Administrateur Systèmes</td><td>Informatique</td><td>03/05/2019</td></tr>
+          <tr><td>Hajar Benhaddou</td><td>Chargée de Communication</td><td>Marketing</td><td>18/11/2020</td></tr>
+          <tr><td>Mehdi El Idrissi</td><td>Analyste Financier</td><td>Finance</td><td>09/04/2016</td></tr>
+          <tr><td>Nadia Laabidi</td><td>Comptable</td><td>Finance</td><td>27/01/2018</td></tr>
+          <tr><td>Samir Bouziane</td><td>Technicien Réseau</td><td>Informatique</td><td>14/08/2021</td></tr>
+          <tr><td>Fatima Zahra Mourchid</td><td>Responsable Formation</td><td>Ressources Humaines</td><td>19/03/2015</td></tr>
+          <tr><td>Adil El Fassi</td><td>Chef de Projet</td><td>Informatique</td><td>25/10/2017</td></tr>
+          <tr><td>Imane Kharbouch</td><td>Assistante Commerciale</td><td>Ventes</td><td>06/12/2020</td></tr>
+          <tr><td>Karim Tazi</td><td>Ingénieur DevOps</td><td>Informatique</td><td>03/03/2022</td></tr>
+          <tr><td>Zineb El Hafidi</td><td>Consultante RH</td><td>Ressources Humaines</td><td>17/06/2019</td></tr>
+          <tr><td>Youssef Ghallab</td><td>Technicien Hotline</td><td>Support</td><td>29/07/2021</td></tr>
+          <tr><td>Salma Oulhaj</td><td>Responsable Paie</td><td>Ressources Humaines</td><td>11/09/2016</td></tr>
+          <tr><td>Hamza Ait Benhammou</td><td>Data Analyst</td><td>Informatique</td><td>02/02/2020</td></tr>
+          <tr><td>Rania El Khatib</td><td>Chargée de Clientèle</td><td>Ventes</td><td>08/04/2021</td></tr>
+          <tr><td>Mohamed El Bakali</td><td>Responsable Informatique</td><td>Informatique</td><td>13/07/2015</td></tr>
+          <tr><td>Sara Bennani</td><td>Assistante Administrative</td><td>Administration</td><td>26/09/2018</td></tr>
+          <tr><td>Ismail Chafai</td><td>Responsable Support</td><td>Support</td><td>20/05/2017</td></tr>
+          <tr><td>Khadija Raji</td><td>Chargée RH Junior</td><td>Ressources Humaines</td><td>16/03/2022</td></tr>
+          <tr><td>Walid Kharroubi</td><td>Développeur Web</td><td>Informatique</td><td>07/06/2023</td></tr>
+          <tr><td>Lamiae Mernissi</td><td>Contrôleuse de Gestion</td><td>Finance</td><td>30/10/2018</td></tr>
+          <tr><td>Othmane Jebli</td><td>Community Manager</td><td>Marketing</td><td>12/01/2021</td></tr>
+          <tr><td>Ilham Zahidi</td><td>Responsable Juridique</td><td>Juridique</td><td>05/05/2016</td></tr>
+          <tr><td>Anas El Bouhali</td><td>Administrateur Base de Données</td><td>Informatique</td><td>22/02/2020</td></tr>
+          <tr><td>Soukaina El Ouali</td><td>Chargée Qualité</td><td>Qualité</td><td>18/07/2019</td></tr>
+          <tr><td>Hicham Mouline</td><td>Chef d'Équipe Support</td><td>Support</td><td>21/11/2020</td></tr>
+          <tr><td>Myriam Bouchaib</td><td>Assistante Juridique</td><td>Juridique</td><td>10/12/2017</td></tr>
+          <tr><td>Noureddine Filali</td><td>Responsable Logistique</td><td>Logistique</td><td>01/03/2015</td></tr>
+          <tr><td>Wafae Kabbaj</td><td>Chargée des Achats</td><td>Achat</td><td>08/08/2018</td></tr>
+          <tr><td>Reda El Ghali</td><td>Chef de Produit</td><td>Marketing</td><td>14/06/2016</td></tr>
+
+        </tbody>
+      </table>
+    </main>
+  </div>
+</body>
+</html>

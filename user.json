@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "username": "cisco",
+        "email": "tyrellwellick@evilcorp.com",
+        "password": "482c811da5d5b4bc6d497ffa98491e38",
+        "role": "admin",
+        "reset_token": null,
+        "security_questions": {
+            "pet": "Flipper",
+            "spouse": "Joanna",
+            "meeting_place": "Allsafe"
+        }
+    },
+    {
+        "id": 2,
+        "username": "johndoe",
+        "email": "johndoe@evilcorp.com",
+        "password": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "role": "user",
+        "reset_token": null,
+        "security_questions": {
+            "pet": "chat",
+            "spouse": "*******",
+            "meeting_place": "--------"
+        }
+    }
+]

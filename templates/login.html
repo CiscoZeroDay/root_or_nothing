@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connexion - E-Corp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #f0f7ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #1e293b; /* bleu foncé neutre */
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 900px;
+      height: 500px;
+      background-color: #ffffff;
+      box-shadow: 0 8px 20px rgba(30, 41, 59, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .left-side {
+      flex: 1;
+      background: #60a5fa; /* bleu ciel saturé */
+      color: #f0f9ff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .left-side h1 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .left-side p {
+      font-size: 18px;
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    .right-side {
+      flex: 1;
+      background-color: #f9fafb; /* gris très clair */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 50px;
+    }
+
+    .form-container {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 28px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border: 1.8px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #60a5fa;
+      outline: none;
+      box-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+    }
+
+    button {
+      background-color: #2563eb; /* bleu foncé */
+      color: white;
+      padding: 14px;
+      border: none;
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    button:hover {
+      background-color: #1e40af;
+      box-shadow: 0 6px 15px rgba(30, 64, 175, 0.6);
+    }
+
+    .forgot-password {
+      display: block;
+      text-align: right;
+      margin-top: 15px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password:hover {
+      color: #1e40af;
+      text-decoration: underline;
+    }
+
+    /* Styles pour les messages flash */
+    ul.flashes {
+      list-style-type: none;
+      padding: 12px 20px;
+      margin-bottom: 25px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    ul.flashes li.success {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    ul.flashes li.error {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-side">
+      <h1>Bienvenue chez </br> Evil Corp</h1>
+      <p>Gérez vos employés de façon sécurisée et moderne avec notre plateforme.</p>
+    </div>
+    <div class="right-side">
+      <div class="form-container">
+        <h2>Connexion</h2>
+
+        <!-- Affichage des messages flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/login">
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password" placeholder="Mot de passe" required />
+          <button type="submit">Se connecter</button>
+         <a href="{{ url_for('forgot_password') }}" class="forgot-password">Mot de passe oublié ?</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Messagerie interne - Evil Corp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset et styles globaux */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #1e293b;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Layout général */
+    .layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar principale */
+    .sidebar {
+      background: #2563eb;
+      color: white;
+      width: 250px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 15px rgba(37, 99, 235, 0.3);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      margin-bottom: 40px;
+      user-select: none;
+    }
+
+    .menu {
+      list-style: none;
+      flex-grow: 1;
+    }
+
+    .menu li {
+      margin-bottom: 8px;
+    }
+
+    .menu li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 20px;
+      display: block;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .menu li a:hover {
+      background: rgba(255 255 255 / 0.15);
+      transform: translateX(6px);
+    }
+
+    .menu li a.active {
+      background: #1e40af;
+      box-shadow: 0 0 10px #1e40afaa;
+      transform: translateX(6px);
+    }
+
+    /* Container messagerie (sidebar + chat) */
+    .messaging-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      background: white;
+      border-radius: 0 20px 20px 0;
+      box-shadow: -10px 0 30px rgb(37 99 235 / 0.1);
+    }
+
+    /* Sidebar messagerie */
+    .conversation-list {
+      width: 300px;
+      background-color: #1e1e2f;
+      color: white;
+      padding: 15px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .conversation-list h2 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .conversation {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background 0.3s;
+    }
+
+    .conversation.active,
+    .conversation:hover {
+      background: #2d2d44;
+    }
+
+    .conversation img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .conversation h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .conversation p {
+      margin: 0;
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    /* Zone chat principale */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* En-tête chat */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      background: #fafafa;
+      flex-shrink: 0;
+    }
+
+    .chat-header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+    }
+
+    .chat-header h3 {
+      font-weight: 600;
+      font-size: 20px;
+      color: #333;
+    }
+
+    /* Messages */
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f7f7f7;
+    }
+
+    .message {
+      max-width: 60%;
+      margin-bottom: 15px;
+      padding: 12px 15px;
+      border-radius: 20px;
+      line-height: 1.4;
+      font-size: 14px;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .message.sent {
+      background-color: #4a90e2;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .message.received {
+      background-color: #e1e1e1;
+      color: #333;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .time {
+      display: block;
+      font-size: 10px;
+      opacity: 0.6;
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    /* Zone de saisie */
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+      flex-shrink: 0;
+    }
+
+    .chat-input input[type="text"] {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 30px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .chat-input input[type="text"]:focus {
+      border-color: #4a90e2;
+    }
+
+    .chat-input button {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin-left: 15px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .chat-input button:hover {
+      background-color: #357abd;
+    }
+
+    /* Scrollbars personnalisées */
+    .conversation-list::-webkit-scrollbar,
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+    .conversation-list::-webkit-scrollbar-thumb,
+    .chat-messages::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 15px 20px;
+        overflow-x: auto;
+        box-shadow: none;
+        border-radius: 0 0 20px 20px;
+      }
+      .logo {
+        margin-bottom: 0;
+        margin-right: 30px;
+      }
+      .menu {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .menu li {
+        margin: 0 8px;
+      }
+      .menu li a {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+      .messaging-container {
+        flex-direction: column;
+        height: calc(100vh - 120px); /* Ajustement pour la sidebar */
+      }
+      .conversation-list {
+        width: 100%;
+        height: 150px;
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .conversation {
+        flex-direction: column;
+        align-items: center;
+        min-width: 100px;
+        margin-right: 10px;
+      }
+      .conversation img {
+        margin-right: 0;
+        margin-bottom: 6px;
+      }
+      .conversation h4, .conversation p {
+        font-size: 12px;
+        text-align: center;
+      }
+      .chat-area {
+        height: calc(100% - 150px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">Evil Corp</div>
+      <ul class="menu">
+        <li><a href="{{ url_for('dashboard') }}">Tableau de bord</a></li>
+        <li><a href="{{ url_for('gestion_personnel') }}">Gestion du personnel</a></li>
+        <li><a href="{{ url_for('gestion_temps') }}">Gestion du temps</a></li>
+        <li><a href="{{ url_for('dossiers_rh') }}">Dossiers RH</a></li>
+        <li><a href="{{ url_for('equipes_departements') }}">Equipes & Départements</a></li>
+        <li><a href="{{ url_for('messagerie_interne') }}" class="active">Messagerie interne</a></li>
+      </ul>
+    </aside>
+
+    <main class="messaging-container">
+
+    <!-- Sidebar -->
+    <aside class="conversation-list">
+      <h2>Messages</h2>
+
+      <div class="conversation active">
+        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="John Doe" />
+        <div>
+          <h4>John Doe</h4>
+          <p>Hey, are we still on for today?</p>
+        </div>
+      </div>
+
+      <div class="conversation">
+        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Alice Smith" />
+        <div>
+          <h4>Alice Smith</h4>
+          <p>Thanks for the update!</p>
+        </div>
+      </div>
+
+      <div class="conversation">
+        <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Michael Brown" />
+        <div>
+          <h4>Michael Brown</h4>
+          <p>Can you send me the report?</p>
+        </div>
+      </div>
+
+      <div class="conversation">
+        <img src="https://randomuser.me/api/portraits/women/30.jpg" alt="Sarah Lee" />
+        <div>
+          <h4>Sarah Lee</h4>
+          <p>Meeting at 3 PM</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Chat area -->
+    <section class="chat-area">
+      <header class="chat-header">
+        <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="John Doe" />
+        <h3>John Doe</h3>
+      </header>
+
+      <div class="chat-messages">
+        <div class="message received">
+          <p>Hey! Are we still on for today?</p>
+          <span class="time">09:15</span>
+        </div>
+        <div class="message sent">
+          <p>Yes! Let’s meet at the cafe at 3 PM.</p>
+          <span class="time">09:17</span>
+        </div>
+        <div class="message received">
+          <p>Perfect. See you then!</p>
+          <span class="time">09:18</span>
+        </div>
+        <div class="message sent">
+          <p>By the way, did you check the new project files?</p>
+          <span class="time">09:20</span>
+        </div>
+        <div class="message received">
+          <p>Not yet, I’ll look into them after lunch.</p>
+          <span class="time">09:22</span>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input type="text" placeholder="Type your message..." />
+        <button>Send</button>
+      </div>
+    </section>
+
+  </main>
+  </div>
+</body>
+</html>
